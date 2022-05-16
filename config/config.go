@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	repository "github.com/Iqblyh/recfood/user/repository/mysql"
+	repositoryShop "github.com/Iqblyh/recfood/shop/repository"
+	repositoryUser "github.com/Iqblyh/recfood/user/repository/mysql"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -51,7 +52,7 @@ func DBInit() (DB *gorm.DB) {
 			),
 		),
 	)
-	DB.AutoMigrate(&repository.User{})
+	DB.AutoMigrate(&repositoryUser.User{}, &repositoryShop.Shop{})
 
 	return
 }

@@ -1,10 +1,10 @@
 package domain
 
 type Service interface {
-	GetDatas() ([]Shop, error)
-	GetDataByID(id int) (Shop, error)
-	CreateData(domain Shop) (Shop, error)
-	EditData(id int) (Shop, error)
+	GetDatas() (response []Shop, err error)
+	GetDataByID(id int) (response Shop, err error)
+	InsertData(domain Shop) (response Shop, err error)
+	EditData(id int, domain Shop) (response Shop, err error)
 	DeleteData(id int) error
 }
 
@@ -12,6 +12,6 @@ type Repository interface {
 	GetShops() ([]Shop, error)
 	GetById(id int) (Shop, error)
 	Save(domain Shop) (int, error)
-	Update(id int, domain Shop) (Shop, error)
+	Update(id int, domain Shop) error
 	Delete(id int) error
 }
