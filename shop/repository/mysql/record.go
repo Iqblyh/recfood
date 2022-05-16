@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"time"
-
 	"github.com/Iqblyh/recfood/shop/domain"
 	"gorm.io/gorm"
 )
@@ -21,8 +19,6 @@ func toDomain(rec Shop) domain.Shop {
 		Address:   rec.Address,
 		Open:      rec.Open,
 		Close:     rec.Close,
-		CreatedAt: time.Time{},
-		UpdatedAt: time.Time{},
 	}
 }
 

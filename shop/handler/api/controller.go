@@ -81,3 +81,34 @@ func (sh ShopHandler) DeleteData(ctx echo.Context) error {
 		"rescode": http.StatusOK,
 	})
 }
+
+func (sh ShopHandler) GetShop(ctx echo.Context) error {
+	id, _ := strconv.Atoi(ctx.Param("id"))
+	res, err := sh.service.GetDataByID(id)
+	if err != nil {
+		return ctx.JSON(http.StatusNotFound, map[string]interface{}{
+			"message": err.Error(),
+			"rescode": http.StatusNotFound,
+		})
+	}
+	return ctx.JSON(http.StatusOK, map[string]interface{}{
+		"mesage":  "success get data",
+		"data":    fromDomain(res),
+		"rescode": http.StatusOK,
+	})
+}
+
+func (sh ShopHandler) GetShops(ctx echo.Context) error {
+	res, err := sh.service.GetDatas()
+	if err != nil {
+		return ctx.JSON(http.StatusBadRequest, map[string]interface{}{
+			"message": "bad request",
+			"rescode": http.StatusBadRequest,
+		})
+	}
+	return ctx.JSON(http.StatusOK, map[string]interface{}{
+		"mesage":  "success get data",
+		"data":    res,
+		"rescode": http.StatusOK,
+	})
+}

@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/Iqblyh/recfood/shop/domain"
 	"gorm.io/gorm"
 )
@@ -11,7 +13,9 @@ type shopRepo struct {
 
 // Delete implements domain.Repository
 func (sr shopRepo) Delete(id int) error {
-	return sr.DB.Delete("id = ?", id).Error
+	var rec Shop
+	err := sr.DB.Unscoped().Delete(&rec, id).Error
+	return err
 }
 
 // GetById implements domain.Repository
@@ -28,7 +32,6 @@ func (sr shopRepo) GetShops() ([]domain.Shop, error) {
 	err := sr.DB.Find(&records).Error
 
 	var shops []domain.Shop
-
 	for _, value := range records {
 		shops = append(shops, toDomain(value))
 	}
@@ -46,10 +49,11 @@ func (sr shopRepo) Save(domain domain.Shop) (int, error) {
 // Update implements domain.Repository
 func (sr shopRepo) Update(id int, domain domain.Shop) error {
 	newRecord := map[string]interface{}{
-		"shop_name": domain.Shop_Name,
-		"address":   domain.Address,
-		"Open":      domain.Open,
-		"Close":     domain.Close,
+		"shop_name":  domain.Shop_Name,
+		"address":    domain.Address,
+		"Open":       domain.Open,
+		"Close":      domain.Close,
+		"Updated_At": time.Now(),
 	}
 
 	err := sr.DB.Model(&domain).Where("id = ?", id).Updates(newRecord).Error

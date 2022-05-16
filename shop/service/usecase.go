@@ -63,7 +63,7 @@ func (ss shopService) InsertData(domain domain.Shop) (response domain.Shop, err 
 	if err != nil {
 		return response, errorConv.Conversion(err)
 	}
-	return data, err
+	return data, nil
 }
 
 func NewShopService(repo domain.Repository) domain.Service {
