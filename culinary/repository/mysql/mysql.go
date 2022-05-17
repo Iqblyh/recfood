@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"net/http"
 
+	"github.com/Iqblyh/recfood/culinary"
 	"github.com/Iqblyh/recfood/culinary/domain"
 	"gorm.io/gorm"
 )
@@ -72,8 +73,8 @@ func (cr culinaryRepo) GetCulinarys() ([]domain.Culinary, error) {
 
 // GetTemp implements domain.Repository
 func (culinaryRepo) GetTemp() (domain.Weather, error) {
-	url := "https://api.openweathermap.org/data/2.5/weather?lat=-7.3961114&lon=109.69516&appid=e17feb8e52d2a152478637d7762b6a40"
-	response, err := http.Get(url)
+	url := "https://api.openweathermap.org/data/2.5/weather?lat=-7.3961114&lon=109.69516"
+	response, err := http.Get(url + "&appid=" + culinary.APPID)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
