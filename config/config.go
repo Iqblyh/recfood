@@ -2,8 +2,8 @@ package config
 
 import (
 	"fmt"
-	"os"
 
+	repositoryCulinary "github.com/Iqblyh/recfood/culinary/repository/mysql"
 	repositoryShop "github.com/Iqblyh/recfood/shop/repository/mysql"
 	repositoryUser "github.com/Iqblyh/recfood/user/repository/mysql"
 	"gorm.io/driver/mysql"
@@ -23,19 +23,13 @@ type Config struct {
 var Conf Config
 
 func Init() {
-	os.Setenv("DBNAME", "recfood")
-	os.Setenv("DBUSER", "root")
-	os.Setenv("DBPASS", "")
-	os.Setenv("DBHOST", "127.0.0.1")
-	os.Setenv("DBPORT", "3306")
-	os.Setenv("JWTSecret", "1324")
 	Conf = Config{
-		DBNAME:    os.Getenv("DBNAME"),
-		DBUSER:    os.Getenv("DBUSER"),
-		DBPASS:    os.Getenv("DBPASS"),
-		DBHOST:    os.Getenv("DBHOST"),
-		DBPORT:    os.Getenv("DBPORT"),
-		JWTSecret: os.Getenv("JWTSECRET"),
+		DBNAME:    "recfood",
+		DBUSER:    "root",
+		DBPASS:    "",
+		DBHOST:    "127.0.0.1",
+		DBPORT:    "3306",
+		JWTSecret: "1324",
 	}
 	fmt.Printf("%+v", Conf)
 }
@@ -52,7 +46,7 @@ func DBInit() (DB *gorm.DB) {
 			),
 		),
 	)
-	DB.AutoMigrate(&repositoryUser.User{}, &repositoryShop.Shop{})
+	DB.AutoMigrate(&repositoryUser.User{}, &repositoryShop.Shop{}, &repositoryCulinary.Culinary{})
 
 	return
 }

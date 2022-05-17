@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Iqblyh/recfood/config"
 	"github.com/Iqblyh/recfood/user/domain"
 	"github.com/labstack/echo/v4"
 )
@@ -20,12 +19,7 @@ func NewUserHandler(service domain.Service) UserHandler {
 	}
 }
 
-func (uh UserHandler) HealthCheck(ctx echo.Context) error {
-	fmt.Println(config.Conf)
-	return ctx.HTML(http.StatusOK, "OK HealtCheck + ")
-}
-
-func (uh UserHandler) InsertData(ctx echo.Context) error {
+func (uh UserHandler) Register(ctx echo.Context) error {
 	req := RequestJSON{}
 
 	if err := ctx.Bind(&req); err != nil {
@@ -44,3 +38,28 @@ func (uh UserHandler) InsertData(ctx echo.Context) error {
 	})
 }
 
+func (uh UserHandler) Login(ctx echo.Context) error {
+	req := RequestJSON{}
+
+	if err := ctx.Bind(&req); err != nil {
+		return errors.New("not found")
+	}
+
+	token, err := uh.service.Login(req.Username, req.Password)
+
+	fmt.Println("data token ", token)
+
+	if err != nil {
+		return ctx.JSON(http.StatusUnauthorized, map[string]interface{}{
+			"message": "anda tidak valid",
+		})
+	}
+
+	return ctx.JSON(http.StatusOK, map[string]interface{}{
+		"message":  "Success",
+		"response": http.StatusOK,
+		"data": map[string]interface{}{
+			"token": token,
+		},
+	})
+}

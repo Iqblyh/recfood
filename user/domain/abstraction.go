@@ -1,7 +1,7 @@
 package domain
 
 type Service interface {
-	CreateToken(email, password string) (token string, err error)
+	Login(username, password string) (token string, err error)
 	InsertData(domain User) (response User, err error)
 	DeleteData(id int) (err error)
 }
