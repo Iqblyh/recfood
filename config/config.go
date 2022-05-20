@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	repository "github.com/Iqblyh/recfood/user/repository/mysql"
+	repositoryShop "github.com/Iqblyh/recfood/shop/repository/mysql"
+	repositoryUser "github.com/Iqblyh/recfood/user/repository/mysql"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -24,7 +25,7 @@ var Conf Config
 func Init() {
 	os.Setenv("DBNAME", "recfood")
 	os.Setenv("DBUSER", "root")
-	os.Setenv("DBPASS", "1324")
+	os.Setenv("DBPASS", "")
 	os.Setenv("DBHOST", "127.0.0.1")
 	os.Setenv("DBPORT", "3306")
 	os.Setenv("JWTSecret", "1324")
@@ -51,7 +52,7 @@ func DBInit() (DB *gorm.DB) {
 			),
 		),
 	)
-	DB.AutoMigrate(&repository.User{})
+	DB.AutoMigrate(&repositoryUser.User{}, &repositoryShop.Shop{})
 
 	return
 }
