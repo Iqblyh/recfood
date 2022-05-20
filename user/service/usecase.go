@@ -20,7 +20,7 @@ func (us userService) Login(username string, password string) (token string, err
 	if err != nil {
 		return "login gagal", errorConv.Conversion(err)
 	}
-	token, err = us.jwtAuth.CreateToken(data.Id)
+	token, err = us.jwtAuth.GenerateToken(data.Id)
 
 	if err != nil {
 		return "gagal", errors.New("waduh")

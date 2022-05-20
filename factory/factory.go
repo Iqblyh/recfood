@@ -16,9 +16,13 @@ import (
 	culinaryApi "github.com/Iqblyh/recfood/culinary/handler/api"
 	culinaryRepoMysql "github.com/Iqblyh/recfood/culinary/repository/mysql"
 	culinaryService "github.com/Iqblyh/recfood/culinary/service"
+
+	reviewApi "github.com/Iqblyh/recfood/review/handler/api"
+	reviewRepoMysql "github.com/Iqblyh/recfood/review/repository/mysql"
+	reviewService "github.com/Iqblyh/recfood/review/service"
 )
 
-func Factory(db *gorm.DB) (userApi.UserHandler, shopApi.ShopHandler, culinaryApi.CulinaryHandler, middleware.JWTConfig) {
+func Factory(db *gorm.DB) (userApi.UserHandler, shopApi.ShopHandler, culinaryApi.CulinaryHandler, reviewApi.ReviewHandler, middleware.JWTConfig) {
 	configJWT := middlewares.ConfigJWT{
 		SecretJWT: "1324",
 	}
@@ -36,5 +40,9 @@ func Factory(db *gorm.DB) (userApi.UserHandler, shopApi.ShopHandler, culinaryApi
 	culinaryServ := culinaryService.NewCulinaryService(culinaryRepo)
 	culinaryHandler := culinaryApi.NewCulinaryHandler(culinaryServ, shopServ)
 
-	return userHandler, shopHandler, culinaryHandler, jwtMiddleware
+	reviewRepo := reviewRepoMysql.NewReviewRepository(db)
+	reviewServ := reviewService.NewReviewService(reviewRepo)
+	reviewHandler := reviewApi.NewReviewHandler(reviewServ, culinaryServ, userServ)
+
+	return userHandler, shopHandler, culinaryHandler, reviewHandler, jwtMiddleware
 }

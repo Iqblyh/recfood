@@ -1,6 +1,8 @@
 package domain
 
 type Review struct {
-	Rating int
-	Review string
+	Culinary_Id int
+	User_Id     int
+	Rating      int
+	Review      string
 }
