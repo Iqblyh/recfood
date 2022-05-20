@@ -1,9 +1,6 @@
 package middlewares
 
 import (
-	"time"
-
-	"github.com/Iqblyh/recfood/config"
 	errorConv "github.com/Iqblyh/recfood/helper/error"
 	"github.com/golang-jwt/jwt"
 	"github.com/labstack/echo/v4"
@@ -14,8 +11,14 @@ type ConfigJWT struct {
 	SecretJWT string
 }
 
+type JwtCustomClaims struct {
+	Id int `json:"id"`
+	jwt.StandardClaims
+}
+
 func (cj ConfigJWT) Init() middleware.JWTConfig {
 	return middleware.JWTConfig{
+		Claims:     &JwtCustomClaims{},
 		SigningKey: []byte(cj.SecretJWT),
 		ErrorHandlerWithContext: middleware.JWTErrorHandlerWithContext(func(err error, c echo.Context) error {
 			return errorConv.Conversion(err)
@@ -24,13 +27,20 @@ func (cj ConfigJWT) Init() middleware.JWTConfig {
 }
 
 //token
-func (cj ConfigJWT) CreateToken(user_id int) (string, error) {
-	claims := jwt.MapClaims{}
-	claims["userID"] = user_id
-	claims["exp"] = time.Now().Add(time.Hour * 1).Unix()
+func (jwtConf *ConfigJWT) GenerateToken(userID int) (string, error) {
+	claims := JwtCustomClaims{
+		Id: userID,
+	}
 
-	claimToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	token, err := claimToken.SignedString([]byte(config.Conf.JWTSecret))
+	// Create token with claims
+	t := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token, err := t.SignedString([]byte(jwtConf.SecretJWT))
 
 	return token, err
+}
+
+func GetUser(c echo.Context) *JwtCustomClaims {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(*JwtCustomClaims)
+	return claims
 }

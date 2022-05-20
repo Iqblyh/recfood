@@ -10,7 +10,7 @@ import (
 func New(db *gorm.DB) *echo.Echo {
 	e := echo.New()
 
-	user, shop, culinary, jwtMiddleware := factory.Factory(db)
+	user, shop, culinary, review, jwtMiddleware := factory.Factory(db)
 
 	//user
 	e.POST("/register", user.Register)
@@ -41,5 +41,16 @@ func New(db *gorm.DB) *echo.Echo {
 	authCulinary.POST("/shop/:id/create", culinary.InsertData)
 	authCulinary.PUT("/edit/:id", culinary.EditData)
 	authCulinary.DELETE("/delete/:id", culinary.DeleteData)
+
+	reviewGroup := e.Group("review")
+	reviewGroup.GET("/user/:id", review.GetUserReviews)
+	reviewGroup.GET("/culinary/:id", review.GetReviews)
+
+	authReview := e.Group("/review")
+	authReview.Use(middleware.JWTWithConfig(jwtMiddleware))
+	authReview.POST("/culinary/:id", review.InsertData)
+	authReview.PUT("/edit/:id", review.EditData)
+	authReview.DELETE("/delete/:id", review.DeleteData)
+
 	return e
 }

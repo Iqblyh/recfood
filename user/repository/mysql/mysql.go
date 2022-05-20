@@ -19,7 +19,7 @@ func (ur userRepo) Delete(id int) (err error) {
 // GetByEmailPassword implements domain.Repository
 func (ur userRepo) GetByUsernamePassword(username string, password string) (domain domain.User, err error) {
 	var record User
-	err = ur.DB.Where("username = ? AND password = ?", username, password).Error
+	err = ur.DB.Where("username = ? AND password = ?", username, password).First(&record).Error
 	return toDomain(record), err
 }
 
@@ -37,7 +37,9 @@ func (ur userRepo) Save(domain domain.User) (id int, err error) {
 	record := fromDomain(domain)
 	err = ur.DB.Save(&record).Error
 
-	return int(record.ID), err
+	fmt.Println(record.Id)
+
+	return int(record.Id), err
 }
 
 func NewUserRepository(db *gorm.DB) domain.Repository {

@@ -3,6 +3,7 @@ package userApi
 import "github.com/Iqblyh/recfood/user/domain"
 
 type RequestJSON struct {
+	Id       int
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -11,6 +12,7 @@ type RequestJSON struct {
 
 func toDomain(req RequestJSON) domain.User {
 	return domain.User{
+		Id:       req.Id,
 		Username: req.Username,
 		Email:    req.Email,
 		Password: req.Password,
@@ -19,6 +21,7 @@ func toDomain(req RequestJSON) domain.User {
 }
 
 type ResponseJSON struct {
+	Id       int
 	Username string `json:"username"`
 	Email    string `json:"email"`
 	Fullname string `json:"fullname"`
@@ -26,6 +29,7 @@ type ResponseJSON struct {
 
 func fromDomain(domain domain.User) ResponseJSON {
 	return ResponseJSON{
+		Id:       domain.Id,
 		Username: domain.Username,
 		Email:    domain.Email,
 		Fullname: domain.Fullname,
